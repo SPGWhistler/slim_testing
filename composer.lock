@@ -1,6 +1,55 @@
 {
-    "hash": "3c60a4d93702a5cc3a097ff4b6fec24e",
+    "hash": "906f9eee753bfde9197e74f406cbcbdd",
     "packages": [
+        {
+            "name": "kraksoft/jquery",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kraksoft/jquery",
+                "reference": "ae54c20d4f73f23e7dc920f3af8e5181e4c27b8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kraksoft/jquery/archive/ae54c20d4f73f23e7dc920f3af8e5181e4c27b8c.zip",
+                "reference": "ae54c20d4f73f23e7dc920f3af8e5181e4c27b8c",
+                "shasum": ""
+            },
+            "time": "2012-10-21 20:46:58",
+            "type": "library",
+            "installation-source": "source",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "jQuery fork",
+            "homepage": "http://jquery.com/",
+            "keywords": [
+                "jquery"
+            ]
+        },
+        {
+            "name": "kraksoft/jquery-ui",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kraksoft/jquery-ui",
+                "reference": "768ede8d8014bc4959d79694edeb0c7847e4bbff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kraksoft/jquery-ui/archive/768ede8d8014bc4959d79694edeb0c7847e4bbff.zip",
+                "reference": "768ede8d8014bc4959d79694edeb0c7847e4bbff",
+                "shasum": ""
+            },
+            "time": "2012-10-21 20:48:14",
+            "type": "library",
+            "installation-source": "source",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "jQuery UI fork",
+            "homepage": "http://jqueryui.com/",
+            "keywords": [
+                "jquery",
+                "ui"
+            ]
+        },
         {
             "name": "raveren/kint",
             "version": "dev-master",
@@ -99,6 +148,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "raveren/kint": 20
+        "raveren/kint": 20,
+        "kraksoft/jquery": 20,
+        "kraksoft/jquery-ui": 20
     }
 }
