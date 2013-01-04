@@ -18,18 +18,40 @@ function getDBCollection()
 
 $app = new \Slim\Slim();
 
-$app->get('/items', function () use ($app) {
+$app->get('/items(/:priority)', function ($priority = NULL) use ($app) {
 	$collection = getDBCollection();
-	// find everything in the collection
-	$cursor = $collection->find();
+	if ($priority === NULL)
+	{
+		// find everything in the collection
+		$cursor = $collection->find();
+	}
+	else
+	{
+		//Find only this priority or less (higher)
+		$priority = (int)$priority;
+		$cursor = $collection->find(array(
+			"priority" => array(
+				'$lte' => $priority
+			)
+		));
+	}
 
 	// iterate through the results
-	$documents = array();
-	foreach ($cursor as $document) {
-		//echo $document["name"] . "\n";
-		//print_r($document);
-		//d($document);
-		$documents[] = $document;
+	if ($priority === NULL)
+	{
+		$documents = iterator_to_array($cursor);
+	}
+	else
+	{
+		$documents = array();
+		$too_old = (time() - 432000); //5 days ago
+		foreach ($cursor as $document) {
+			//If this item was modified less then x days ago or is a p1...
+			if ((int)$document['last_modified'] > $too_old || (int)$document['priority'] === 1)
+			{
+				$documents[] = $document;
+			}
+		}
 	}
 	echo json_encode($documents);
 	$res = $app->response();
@@ -50,7 +72,7 @@ $app->post('/item/:name(/:priority)', function ($name, $priority = 3) use ($app)
 	// add a record
 	$document = array(
 		"name" => $name,
-		"last_modified" => date('U'),
+		"last_modified" => time(),
 		"priority" => $priority,
 	);
 	$collection->insert($document);
