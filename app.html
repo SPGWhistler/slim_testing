@@ -12,23 +12,25 @@
 		$( '#home' ).live( 'pageinit',function(event){
 			$('#list').empty();
 			$.getJSON("list.php/items", function(result){
-				var items = {};
+				var items = {}, priorities = [];
 				for (var i in result)
 				{
 					if (result.hasOwnProperty(i))
 					{
+						if ($.inArray(result[i].priority, priorities) === -1) priorities.push(result[i].priority);
 						items["p" + result[i].priority] = (typeof items["p" + result[i].priority] !== "undefined") ? items["p" + result[i].priority] : [];
 						items["p" + result[i].priority].push(result[i]);
 					}
 				}
-				for (i in items)
+				priorities.sort(function(a,b){return a-b});
+				for (i in priorities)
 				{
-					if (items.hasOwnProperty(i))
+					if (priorities.hasOwnProperty(i))
 					{
-						$('#list').append('<li data-role="list-divider" role="heading">' + i + '</li>');
-						for (var j in items[i])
+						$('#list').append('<li data-role="list-divider" role="heading">P' + priorities[i] + '</li>');
+						for (var j in items["p" + priorities[i]])
 						{
-							$('#list').append('<li id="' + items[i][j]._id.$id + '" data-theme="c"><a href="#page2" data-transition="slide">' + items[i][j].name + '</a></li>');
+							$('#list').append('<li id="' + items["p" + priorities[i]][j]._id.$id + '" data-theme="c"><a href="#page2" data-transition="slide">' + items["p" + priorities[i]][j].name + '</a></li>');
 						}
 					}
 				}

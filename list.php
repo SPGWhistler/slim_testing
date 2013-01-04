@@ -106,13 +106,17 @@ $app->post('/item/:id', function ($id) use ($app) {
 	$document = array();
 	foreach ($app->request()->params() as $key=>$val)
 	{
+		if ($key === "priority")
+		{
+			$val = (int)$val;
+		}
 		$document[$key] = $val;
 	}
 	unset($document['_id']);
 	$document['last_modified'] = time();
 	try
 	{
-		$status = $collection->update($criteria, $document);
+		$status = $collection->update($criteria, array('$set' => $document));
 	} catch (MongoCursorException $e)
 	{
 		$app->response()->status(500);
