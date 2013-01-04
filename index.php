@@ -27,9 +27,32 @@
         	.disableSelection();
 	$("#remove_all")
 		.click(function(){
+			$( "#dialog-confirm" ).dialog({
+				resizable: false,
+				height:240,
+				width:500,
+				modal: true,
+				buttons: {
+					"Delete all items": function() {
+						$( this ).dialog( "close" );
+						$.post("list.php/remove/items", function(){
+							loadItems();
+						});
+					},
+					Cancel: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		})
+		.button();
+	$("#new_item")
+		.click(function(){
+			/*
 			$.post("list.php/remove/items", function(){
 				loadItems();
 			});
+			*/
 		})
 		.button();
 	function loadItems()
@@ -54,6 +77,11 @@
 
 <ul id="sortable" style="display: none;"></ul>
 <button id="remove_all">Remove All Items</button>
+<button id="new_item">New</button>
+
+<div id="dialog-confirm" style="display: none;" title="Remove all items from the list?">
+	<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>All items will be permanently deleted and cannot be recovered. Are you sure?</p>
+</div>
 
 </body>
 </html>
