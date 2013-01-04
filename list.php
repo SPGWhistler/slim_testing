@@ -66,10 +66,10 @@ $app->post('/remove/items', function () use ($app) {
 	echo "Removed all items.";
 });
 
-$app->post('/remove/item/:name', function ($name) use ($app) {
+$app->post('/remove/item/:id', function ($id) use ($app) {
 	$collection = getDBCollection();
 	$status = $collection->remove(array(
-		"_id" => strtolower($name)
+		"_id" => $id
 	));
 	$app->response()->status(200);
 	echo "Removed item.";
@@ -80,7 +80,6 @@ $app->put('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) 
 	$priority = (int)$priority;
 	// add a record
 	$document = array(
-		"_id" => strtolower($name),
 		"name" => $name,
 		"last_modified" => time(),
 		"priority" => $priority,
@@ -96,6 +95,33 @@ $app->put('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) 
 	}
 	$app->response()->status(201);
 	echo "Created " . $name . ".";
+});
+
+$app->post('/item/:id', function ($id) use ($app) {
+	$collection = getDBCollection();
+	// update a record
+	$criteria = array(
+		"_id" => new MongoId($id)
+	);
+	$document = array();
+	foreach ($app->request()->params() as $key=>$val)
+	{
+		$document[$key] = $val;
+	}
+	unset($document['_id']);
+	$document['last_modified'] = time();
+	try
+	{
+		$status = $collection->update($criteria, $document);
+	} catch (MongoCursorException $e)
+	{
+		$app->response()->status(500);
+		echo "error message: ".$e->getMessage()."\n";
+		echo "error code: ".$e->getCode()."\n";
+		return;
+	}
+	$app->response()->status(202);
+	echo "Updated.";
 });
 
 $app->run();

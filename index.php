@@ -28,12 +28,18 @@
         	.disableSelection();
 	$('#sortable').delegate('li', 'click', function(){
 		var $label = $(this).find('span.name');
+		var _id = $(this).attr('id');
 		var old_value = $label.text();
 		$label.replaceWith('<span class="edit"><input type="text" value="' + old_value + '" /></span>');
 		var $edit = $(this).find('span.edit>input');
 		$edit.select();
 		$edit.blur(function(){
-			console.log($edit.val());
+			$.post("list.php/item/" + _id, {
+				name: $edit.val()
+			},
+			function(){
+				loadItems();
+			});
 		});
 	});
 	$("#remove_all")
@@ -76,7 +82,7 @@
 			{
 				if (result.hasOwnProperty(i))
 				{
-					$('#sortable').append('<li id="' + result[i]._id + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><span class="name">' + result[i].name + '</span></li>');
+					$('#sortable').append('<li id="' + i + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><span class="name">' + result[i].name + '</span></li>');
 				}
 			}
 			$( "#sortable" ).show('blind', {}, 700);
