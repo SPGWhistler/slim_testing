@@ -21,6 +21,7 @@ $app->get('/items', function () use ($app) {
 	}
 });
 $app->post('/item/:name', function ($name) use ($app) {
+	//sd($app->request()->params());
 	// connect
 	$m = new MongoClient();
 
