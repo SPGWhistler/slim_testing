@@ -66,6 +66,14 @@ $app->post('/remove/items', function () use ($app) {
 	echo "Removed all items.";
 });
 
+$app->post('/remove/item/:name', function ($name) use ($app) {
+	$collection = getDBCollection();
+	//$status = $collection->remove(array(
+		//"name" => $name
+	//));
+	//@TODO
+});
+
 $app->post('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) {
 	$collection = getDBCollection();
 	$priority = (int)$priority;
