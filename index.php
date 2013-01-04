@@ -27,7 +27,14 @@
 		})
         	.disableSelection();
 	$('#sortable').delegate('li', 'click', function(){
-		$(this).find('span.name').replaceWith('<span>TEST</span>');
+		var $label = $(this).find('span.name');
+		var old_value = $label.text();
+		$label.replaceWith('<span class="edit"><input type="text" value="' + old_value + '" /></span>');
+		var $edit = $(this).find('span.edit>input');
+		$edit.select();
+		$edit.blur(function(){
+			console.log($edit.val());
+		});
 	});
 	$("#remove_all")
 		.click(function(){
@@ -52,8 +59,12 @@
 		.button();
 	$("#new_item")
 		.click(function(){
-			$.post("list.php/item/untitled", function(){
-				loadItems();
+			$.ajax({
+				type: 'PUT',
+				url: 'list.php/item/untitled',
+				success: function(){
+					loadItems();
+				}
 			});
 		})
 		.button();

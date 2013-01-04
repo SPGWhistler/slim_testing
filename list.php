@@ -75,7 +75,7 @@ $app->post('/remove/item/:name', function ($name) use ($app) {
 	echo "Removed item.";
 });
 
-$app->post('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) {
+$app->put('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) {
 	$collection = getDBCollection();
 	$priority = (int)$priority;
 	// add a record
