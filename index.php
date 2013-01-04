@@ -16,30 +16,44 @@
     </style>
     <script>
     $(function() {
-        $( "#sortable" ).sortable({
-		stop: function( event, ui ) {
-			console.log($.map($(this).find('li'), function(el) {
-				return el.id + ' = ' + $(el).index();
-			}));
-		}
-	});
-        $( "#sortable" ).disableSelection();
-	$.getJSON("list.php/items", function(result){
-		for (var i in result)
-		{
-			if (result.hasOwnProperty(i))
-			{
-				$('#sortable').append('<li id="' + result[i]._id + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>' + result[i].name + '</li>');
+        $( "#sortable" )
+		.sortable({
+			stop: function( event, ui ) {
+				console.log($.map($(this).find('li'), function(el) {
+					return el.id + ' = ' + $(el).index();
+				}));
 			}
-		}
-		$( "#sortable" ).show('blind', {}, 700);
-	});
+		})
+        	.disableSelection();
+	$("#remove_all")
+		.click(function(){
+			$.post("list.php/remove/items", function(){
+				loadItems();
+			});
+		})
+		.button();
+	function loadItems()
+	{
+		$('#sortable').empty();
+		$.getJSON("list.php/items", function(result){
+			for (var i in result)
+			{
+				if (result.hasOwnProperty(i))
+				{
+					$('#sortable').append('<li id="' + result[i]._id + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>' + result[i].name + '</li>');
+				}
+			}
+			$( "#sortable" ).show('blind', {}, 700);
+		});
+	}
+	loadItems();
     });
     </script>
 </head>
 <body>
 
 <ul id="sortable" style="display: none;"></ul>
+<button id="remove_all">Remove All Items</button>
 
 </body>
 </html>
