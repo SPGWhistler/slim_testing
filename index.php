@@ -48,11 +48,9 @@
 		.button();
 	$("#new_item")
 		.click(function(){
-			/*
-			$.post("list.php/remove/items", function(){
+			$.post("list.php/item/untitled", function(){
 				loadItems();
 			});
-			*/
 		})
 		.button();
 	function loadItems()
