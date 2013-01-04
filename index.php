@@ -12,7 +12,8 @@
     <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
     #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-    #sortable li span { position: absolute; margin-left: -1.3em; }
+    #sortable li span.ui-icon { position: absolute; margin-left: -1.3em; }
+    #sortable li span.name {  }
     </style>
     <script>
     $(function() {
@@ -25,6 +26,9 @@
 			}
 		})
         	.disableSelection();
+	$('#sortable').delegate('li', 'click', function(){
+		$(this).find('span.name').replaceWith('<span>TEST</span>');
+	});
 	$("#remove_all")
 		.click(function(){
 			$( "#dialog-confirm" ).dialog({
@@ -61,7 +65,7 @@
 			{
 				if (result.hasOwnProperty(i))
 				{
-					$('#sortable').append('<li id="' + result[i]._id + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>' + result[i].name + '</li>');
+					$('#sortable').append('<li id="' + result[i]._id + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><span class="name">' + result[i].name + '</span></li>');
 				}
 			}
 			$( "#sortable" ).show('blind', {}, 700);
