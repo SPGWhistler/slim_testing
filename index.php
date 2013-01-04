@@ -68,10 +68,11 @@ $app->post('/remove/items', function () use ($app) {
 
 $app->post('/remove/item/:name', function ($name) use ($app) {
 	$collection = getDBCollection();
-	//$status = $collection->remove(array(
-		//"name" => $name
-	//));
-	//@TODO
+	$status = $collection->remove(array(
+		"_id" => strtolower($name)
+	));
+	$app->response()->status(200);
+	echo "Removed item.";
 });
 
 $app->post('/item/:name(/:priority)', function ($name, $priority = 3) use ($app) {
@@ -79,11 +80,20 @@ $app->post('/item/:name(/:priority)', function ($name, $priority = 3) use ($app)
 	$priority = (int)$priority;
 	// add a record
 	$document = array(
+		"_id" => strtolower($name),
 		"name" => $name,
 		"last_modified" => time(),
 		"priority" => $priority,
 	);
-	$collection->insert($document);
+	try
+	{
+		$status = $collection->insert($document);
+	} catch (MongoCursorException $e)
+	{
+		$app->response()->status(409);
+		echo "Not created. Duplicate item name: " . $name;
+		return;
+	}
 	$app->response()->status(201);
 	echo "Created " . $name . ".";
 });
