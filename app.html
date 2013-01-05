@@ -9,7 +9,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 <script>
-	$( '#home' ).live( 'pageinit',function(event){
+	function loadItems(){
 		$('#list').empty();
 		$.getJSON("list.php/items", function(result){
 			var items = {}, priorities = [];
@@ -36,6 +36,44 @@
 			}
 			$('#list').listview('refresh');
 		});
+	}
+	$('#list a').live('click', function(event){
+		console.log($(this).parents('li').attr('id'));
+	});
+	$( '#home' ).live( 'pageinit',function(event){
+		$('#link_remove').click(function(){
+			$.post("list.php/remove/items", function(){
+				loadItems();
+			});
+		});
+		$('#link_remove_single').click(function(){
+			$.post("list.php/remove/item/", function(){
+				loadItems();
+			});
+		});
+		$('#link_new').click(function(e){
+			var newname = $('#new-name').val();
+			var newpriority = $('#new-priority').val();
+			if (newname === "")
+			{
+				e.preventDefault();
+				return false;
+			}
+			if (newpriority !== "")
+			{
+				newpriority = "/" + newpriority;
+			}
+			$.ajax({
+				type: 'PUT',
+				url: 'list.php/item/' + newname + newpriority,
+				success: function(){
+					$('#new-name').val('');
+					$('#new-priority').val('3');
+					loadItems();
+				}
+			});
+		});
+		loadItems();
 	});
 </script>
 </head>
@@ -44,13 +82,6 @@
 	<div data-role="page" id="home">
 		<div data-theme="a" data-role="header">
 			<h1>Shopping List</h1>
-			<div data-role="fieldcontain">
-				<select name="" data-theme="a">
-					<option value="">All Priorities</option>
-					<option value="2">P2 or P1</option>
-					<option value="1">P1 Only</option>
-				</select>
-			</div>
 		</div>
 		<div data-role="content">
 			<ul id="list" data-role="listview" data-divider-theme="b" data-inset="false">
@@ -63,20 +94,36 @@
 						<a href="#confirm" data-transition="pop" data-theme="" data-icon="delete" data-rel="dialog">Remove All</a>
 					</li>
 					<li>
-						<a href="#page1" data-transition="fade" data-theme="" data-icon="plus">New Item</a>
+						<a href="#new" data-transition="fade" data-theme="" data-icon="plus">New Item</a>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 
-	<!-- Test -->
-	<div data-role="page" id="page2">
+	<!-- New -->
+	<div data-role="dialog" id="new">
 		<div data-theme="a" data-role="header">
-			<h1>Test Page</h1>
+			<h1>New Item</h1>
 		</div>
 		<div data-role="content">
-			<a href="#home" data-transition="slide" data-direction="reverse">Go Back</a>
+			<div data-role="fieldcontain" class="ui-hide-label">
+				<label for="new-name">Item Name:</label>
+				<input type="text" name="new-name" id="new-name" value="" placeholder="Item Name"/>
+			</div>
+			<select name="new-priority" id="new-priority">
+				<option value="1">Priority: 1</option>
+				<option value="2">Priority: 2</option>
+				<option value="3" selected="selected">Priority: 3</option>
+			</select>
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a">
+					<a href="#home" data-role="button" data-direction="reverse">Cancel</a>
+				</div>
+				<div class="ui-block-b">
+					<a id="link_new" href="#home" data-role="button" data-direction="reverse">Add</a>
+				</div>
+			</fieldset>
 		</div>
 	</div>
 
@@ -86,11 +133,32 @@
 			<h1>Remove All Items?</h1>
 		</div>
 		<div data-role="content">
-			<!-- <a href="#home" data-transition="pop" data-direction="reverse">Go Back</a> -->
 			<h3>Are you sure that you want to remove all items from the list?</h3>
 			<fieldset class="ui-grid-a">
-				<div class="ui-block-a"><button type="submit" data-theme="c">Cancel</button></div>
-				<div class="ui-block-b"><button type="submit" data-theme="b">Remove All Items</button></div>
+				<div class="ui-block-a">
+					<a href="#home" data-role="button" data-direction="reverse">Cancel</a>
+				</div>
+				<div class="ui-block-b">
+					<a id="link_remove" href="#home" data-role="button" data-direction="reverse">Remove All Items</a>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+
+	<!-- Confirm Single Dialog -->
+	<div data-role="dialog" id="confirm-single">
+		<div data-theme="a" data-role="header">
+			<h1>Remove This Item?</h1>
+		</div>
+		<div data-role="content">
+			<h3>Are you sure that you want to remove this item from the list?</h3>
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a">
+					<a href="#home" data-role="button" data-direction="reverse">Cancel</a>
+				</div>
+				<div class="ui-block-b">
+					<a id="link_remove_single" href="#home" data-role="button" data-direction="reverse">Remove It</a>
+				</div>
 			</fieldset>
 		</div>
 	</div>
