@@ -69,6 +69,7 @@
 				success: function(){
 					$('#new-name').val('');
 					$('#new-priority').val('3');
+					$('#new-priority').selectmenu('refresh', true);
 					loadItems();
 				}
 			});
